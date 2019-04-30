@@ -105,6 +105,43 @@ def WriteCSV(filepath, data):
         writer.writerows(write)
 
 
+def SeparateData(data, header_rows=None):
+    '''
+    Separates data in the form of a list of lists (intended to be created by the ReadCSV function)
+    into header data and body data.
+
+    Parameters:
+        data             (list)  --  list of lists to separate
+        header_rows      (int)   --  number of header rows in the data (default is None)
+    '''
+
+    header, body = [], []
+    if header_rows is not None:
+        for c in range(len(data)):
+            header.append( data[c][0:header_rows] )
+            body.append( data[c][header_rows:] )
+    else: body = data
+
+    return header, body
+
+
+def CombineData(header, body):
+    '''
+    Combines header and body information (intended to be created by the SeparateData function)
+    into data in the form of a list of lists.
+
+    Parameters:
+        header           (list)  --  header list of lists
+        body             (list)  --  body list of lists
+    '''
+
+    data = []
+    for c, column in enumerate(header):
+        data.append( header[c] + body[c] )
+
+    return data
+
+
 #####################################################################################################
 #####################################################################################################
 ##############################  ______ _       _     _              _  ##############################
