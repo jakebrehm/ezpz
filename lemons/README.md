@@ -4,9 +4,9 @@ A package that makes things easy.
 
 ## Why lemons?
 
-Originally intending to call this package *ezpz*, it was soon discovered that the name was already taken. Heartbroken, and with no other ideas for what to call this package, it felt like the world had ended.
+Originally intending to call this package *ezpz*, it was soon discovered that the name had already been taken. Heartbroken, and with no other ideas for what to call this package, it felt like the world had ended. The feeling of dread and loss was devastating - debilitating, even.
 
-Then I had the idea: why not go back to the root of it all, the title of one of my earliest programs: *EZPZ Lemon Squeezy*. When life give you lemons, you squeeze them! A simple yet elegant title was there all along, yearning to represent this package; thus, the name *lemons* was born.
+Nonetheless, when life give you lemons, you squeeze them! Aha, an epiphany: why not go back to the root of it all, the title of one of my earliest programs: *EZPZ Lemon Squeezy*? A simple yet elegant title was there all along, yearning to represent this package and all it stood for; the darkness vanished as quickly as it came, and the name *lemons* was born.
 
 ## What does it do?
 
@@ -23,7 +23,7 @@ With one line of code each, *lemons* can currently:
 
 ### GUI Building
 
-The tkinter framework, as many know, is not the most user-friendly GUI-builder out there. *Lemons* hopes to help ease that pain a little. This is the are where this package really shines.
+The tkinter framework, as many know, is not the most user-friendly GUI-builder out there. *Lemons* hopes to help ease that pain a little. This is the area where this package really shines.
 
 Some of the things that can be done:
 
@@ -35,3 +35,9 @@ Some of the things that can be done:
         tab = lemons.gui.ScrollableTab(notebook, 'Title')
         # Your tab contents here
         tab.update()
+
+## Special Thanks
+
+Thank you for taking the time to read this and use this package. Enjoy!
+
+Please email `mail@jakebrehm.com` with any feedback or suggestions.

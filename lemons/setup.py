@@ -7,10 +7,10 @@ README = (HERE / 'README.md').read_text()
 
 setup(
      name='lemons',
-     version='0.14',
+     version='0.15',
      author="Jake Brehm",
      author_email="mail@jakebrehm.com",
-     description="A GUI and common function utility package",
+     description="A GUI-building and data-crunching utility package.",
      long_description=README,
      long_description_content_type="text/markdown",
      url="https://github.com/jakebrehm/lemons",
