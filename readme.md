@@ -18,19 +18,19 @@ With one line of code each, *lemons* can currently:
 
 * Read a .csv file and return the desired columns
 * Write data to a .csv file
-* Separate the header of a data set into header data and body data
+* Separate a data set into header data and body data
 * Combine the header data with the body data again if necessary
 
 ### GUI Building
 
-The tkinter framework, as many know, is not the most user-friendly GUI-builder out there. *Lemons* hopes to help ease that pain a little. This is the area where this package really shines.
+The tkinter framework, as many know, is not the most user-friendly GUI-builder out there. *Lemons* hopes to help ease that pain a little. This is where this package really shines.
 
 Some of the things that can be done:
 
 * Easily create a horizontal separator with vertical padding
 * Add convenient spacing between widgets
 * Make input and output fields and lists, and then easily get the filepaths of the selections
-* Creating a scrollable notebook tab, which previously took dozens of lines of code per tab, can now be done in just two.
+* Creating a scrollable notebook tab, which previously took dozens of lines of code per tab, can now be done in just two:
 
         tab = lemons.gui.ScrollableTab(notebook, 'Title')
         # Your tab contents here

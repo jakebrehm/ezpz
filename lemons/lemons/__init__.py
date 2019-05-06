@@ -59,11 +59,10 @@ def ReadCSV(filepath, columns, sort=False, condense=True):
         for i, item in enumerate(row, start=1):
             for c, column in enumerate(columns, start=0):
                 if i == column:
-                    # data[c].append(float(item))
                     try:
                         data[c].append(float(item) if ('.' in item) else int(item))
                     except:
-                        data[c].append(None)
+                        data[c].append(item if item else None)
 
     # Return the relevant information as a list of lists
     return data
