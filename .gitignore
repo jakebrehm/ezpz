@@ -1,4 +1,7 @@
 Assets/
+lemons/dist
+lemons/lemons.egg-info
 demo.csv
 plug_profile.csv
 test.py
+pypi.txt
