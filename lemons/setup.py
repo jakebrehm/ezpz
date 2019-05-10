@@ -7,7 +7,7 @@ README = (HERE / 'README.md').read_text()
 
 setup(
      name='lemons',
-     version='0.15',
+     version='0.16',
      author="Jake Brehm",
      author_email="mail@jakebrehm.com",
      description="A GUI-building and data-crunching utility package.",
@@ -17,7 +17,6 @@ setup(
      packages=find_packages(),
      include_package_data=True,
      classifiers=[
-         "Programming Language :: Python :: 3",
          "Programming Language :: Python :: 3.7",
          "Operating System :: OS Independent",
      ],
