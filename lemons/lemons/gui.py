@@ -47,8 +47,10 @@ class Application(tk.Frame):
         self.grid(row=0, column=0, padx=padx, pady=pady, sticky='NSEW')
         self.grid_columnconfigure(0, weight=1)
 
-    def configure(self, title=None, resizable=(True, True)):
+    def configure(self, title=None, icon=None, resizable=None):
         self.root.title(title)
+
+        if icon: self.root.iconbitmap(default=icon)
 
         if resizable and type(resizable) == bool:
             self.root.resizable(width=True, height=True)
@@ -56,8 +58,6 @@ class Application(tk.Frame):
             self.root.resizable(width=False, height=False)
         elif resizable and type(resizable) == tuple and len(resizable) == 2:
             self.root.resizable(width=resizable[0], height=resizable[1])
-        else:
-            self.root.resizable(width=True, height=True)
 
     def window(self, center=True):
 
@@ -88,6 +88,9 @@ class Application(tk.Frame):
                           + str(int(X_POSITION)) + "+" + str(int(Y_POSITION)))
         elif not center:
             self.root.geometry(str(PROGRAM_WIDTH) + "x" + str(PROGRAM_HEIGHT))
+
+    def bind(self, key, command):
+        self.root.bind(key, command)
 
     @property
     def parent(self):
@@ -157,34 +160,40 @@ class Separator(tk.Frame):
 
 class Space(tk.Frame):
 
-    def __init__(self, *args, row, column, padding=20, **kwargs):
-        tk.Frame.__init__(self, *args, height=padding, **kwargs)
-        self.grid(row=row, column=column, sticky='NSEW')
+    def __init__(self, *args, row, column, padding=20, direction='horizontal',
+                 rowspan=None, columnspan=None, **kwargs):
+        if direction == 'horizontal':
+            tk.Frame.__init__(self, *args, height=padding, **kwargs)
+            self.grid(row=row, column=column, columnspan=columnspan, sticky='NSEW')
+        elif direction == 'vertical':
+            tk.Frame.__init__(self, *args, width=padding, **kwargs)
+            self.grid(row=row, column=column, rowspan=rowspan, sticky='NSEW')
 
 
 class InputField(tk.Frame):
 
-    def __init__(self, *args, quantity, fullpath=True, width=40,
+    def __init__(self, *args, quantity, appearance='entry', fullpath=True, width=40,
                  title='Select the input', **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
 
         self.quantity = quantity
+        self.appearance = appearance
         self.width = width
         self.fullpath = fullpath
         self.title = title
 
         self.inputs = []
 
-        if quantity == 'single':
+        if self.appearance == 'entry':
             label = ttk.Label(self, text='Input location:')
             label.grid(row=0, column=0, sticky='EW')
-            self.entry = ttk.Entry(self, state='readonly')
+            self.entry = ttk.Entry(self, takefocus=False, width=self.width, state='readonly')
             self.entry.grid(row=1, column=0, padx=(0,2), sticky='EW')
-            button = ttk.Button(self, takefocus=0, text='Browse...', command=self.Browse)
+            button = ttk.Button(self, takefocus=False, text='Browse...', command=self.Browse)
             button.grid(row=1, column=1, sticky='NSEW')
             self.columnconfigure(0, weight=1)
 
-        elif quantity == 'multiple':
+        elif self.appearance == 'list':
             self.list = tk.Listbox(self, state='normal', height=5, width=self.width, justify='center')
             self.list.grid(row=1, column=0, padx=(0,2), sticky="EW")
             info = ['',
@@ -196,7 +205,7 @@ class InputField(tk.Frame):
             self.list.config(state='disabled')
 
             controls = tk.Frame(self)
-            button = ttk.Button(controls, takefocus=0, text='Browse...', command=self.Browse)
+            button = ttk.Button(controls, takefocus=False, text='Browse...', command=self.Browse)
             button.grid(row=0, column=0, sticky="NSEW")
             controls.grid_rowconfigure(0, weight=1)
             controls.grid(row=1, column=1, sticky="NSEW")
@@ -205,43 +214,54 @@ class InputField(tk.Frame):
 
     def Browse(self):
 
+        field = self.entry if self.appearance == 'entry' else self.list
+
         if self.quantity == 'single':
             file = fd.askopenfilename(title=self.title)
             if file:
-                self.entry.config(state='normal')
-                self.entry.delete(0, 'end')
+                field.config(state='normal')
+                field.delete(0, 'end')
                 if self.fullpath:
-                    self.entry.insert(0, file)
+                    field.insert(0, file)
                 else:
                     filename = file.split('/')[-1]
-                    self.entry.insert(0, filename)
-                self.entry.config(state='readonly')
-                self.entry.update_idletasks()
-                self.entry.xview_moveto(1)
+                    field.insert(0, filename)
+                field.config(state='readonly')
+                field.update_idletasks()
+                field.xview_moveto(1)
             self.inputs = file
 
         elif self.quantity == 'multiple':
             files = fd.askopenfilenames(title=self.title)
             if files:
                 self.inputs = list(files)
-                self.list.config(state='normal')
-                self.list.delete(0, 'end')
-                if self.fullpath:
-                    [self.list.insert('end', ' ' + file) for file in self.inputs]
-                else:
-                    filenames = [file.split('/')[-1] for file in self.inputs]
-                    [self.list.insert('end', ' ' + file) for file in filenames]
-                self.list.config(state='disabled')
-                self.list.config(justify='left')
+                field.config(state='normal')
+                field.delete(0, 'end')
 
-    @property
+                for file in self.inputs:
+                    display = ' ' + ( file if self.fullpath else file.split('/')[-1] )
+                    if self.appearance == 'entry': display += ';'
+                    field.insert('end', display)
+                if self.appearance == 'entry':
+                    text = field.get()[:-1]
+                    field.delete(0, 'end')
+                    field.insert(0, text)
+
+                if self.appearance == 'entry':
+                    field.config(state='readonly')
+                    field.update_idletasks()
+                    field.xview_moveto(1)
+                elif self.appearance == 'list':
+                    field.config(state='disabled')
+                    field.config(justify='left')
+
     def get(self):
         return self.inputs
 
 
 class OutputField(tk.Frame):
 
-    def __init__(self, *args, quantity, filetypes, default, fullpath=True,
+    def __init__(self, *args, quantity, filetypes=None, default=None, fullpath=True,
                  title='Choose output destination', **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
 
@@ -253,11 +273,14 @@ class OutputField(tk.Frame):
 
         self.output = None
 
+        if self.filetypes is None: self.filetypes = ()
+        if self.default is None: self.default = ()
+
         label = ttk.Label(self, text='Output destination:')
         label.grid(row=0, column=0, sticky='EW')
-        self.entry = ttk.Entry(self, state='readonly')
+        self.entry = ttk.Entry(self, takefocus=False, state='readonly')
         self.entry.grid(row=1, column=0, padx=(0,2), sticky='EW')
-        button = ttk.Button(self, takefocus=0, text='Browse...', command=self.Browse)
+        button = ttk.Button(self, takefocus=False, text='Browse...', command=self.Browse)
         button.grid(row=1, column=1, sticky='NSEW')
         self.columnconfigure(0, weight=1)
 
@@ -265,8 +288,8 @@ class OutputField(tk.Frame):
 
         if self.quantity == 'saveas':
             self.output = fd.asksaveasfilename(title=self.title,
-                                          filetypes=self.filetypes,
-                                          defaultextension=self.default)
+                                               filetypes=self.filetypes,
+                                               defaultextension=self.default)
             if self.output:
                 self.entry.config(state='normal')
                 self.entry.delete(0, 'end')
@@ -290,7 +313,6 @@ class OutputField(tk.Frame):
                 self.entry.update_idletasks()
                 self.entry.xview_moveto(1)
 
-    @property
     def get(self):
         return self.output
 
@@ -405,8 +427,6 @@ def RenderImage(filepath, downscale=None):
         scaled_width = int( width / width_scale )
         scaled_height = int( height / height_scale )
         loaded = loaded.resize((scaled_width, scaled_height), Image.ANTIALIAS)
-    else:
-        pass
     render = ImageTk.PhotoImage(loaded)
     return render
 

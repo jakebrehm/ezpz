@@ -4,5 +4,4 @@ lemons/lemons.egg-info
 lemons/__pycache__/
 demo.csv
 plug_profile.csv
-test.py
-pypi.txt
+*.py
