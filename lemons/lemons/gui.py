@@ -26,7 +26,9 @@ from tkinter import messagebox as mb
 
 class Application(tk.Frame):
 
-    def __init__(self, *args, padding=None, **kwargs):
+    def __init__(self, *args, padding=None, center=True, **kwargs):
+
+        self.center = center
 
         self.root = tk.Tk()
         self.root.grid_rowconfigure(0, weight=1)
@@ -59,35 +61,12 @@ class Application(tk.Frame):
         elif resizable and type(resizable) == tuple and len(resizable) == 2:
             self.root.resizable(width=resizable[0], height=resizable[1])
 
-    def window(self, center=True):
-
-        self.root.update()
-
-        padding_x = self.root.winfo_width() - self.winfo_width()
-        padding_y = self.root.winfo_height() - self.winfo_height()
-
-        frames = self.winfo_children()
-
-        frame_heights = []
-        for frame in frames:
-            if frame.winfo_ismapped():
-                frame_heights.append(frame.winfo_height())
-        PROGRAM_HEIGHT = sum(frame_heights) + padding_y
-
-        frame_widths = []
-        for frame in frames:
-            if frame.winfo_ismapped():
-                frame_widths.append(frame.winfo_width())
-        PROGRAM_WIDTH = max(frame_widths) + padding_x
-
-        X_POSITION = ( self.root.winfo_screenwidth() - PROGRAM_WIDTH )/2
-        Y_POSITION = ( self.root.winfo_screenheight() - PROGRAM_HEIGHT )/2
-
+    def geometry(self, center=True):
         if center:
-            self.root.geometry(str(PROGRAM_WIDTH) + "x" + str(PROGRAM_HEIGHT) + "+" \
-                          + str(int(X_POSITION)) + "+" + str(int(Y_POSITION)))
-        elif not center:
-            self.root.geometry(str(PROGRAM_WIDTH) + "x" + str(PROGRAM_HEIGHT))
+            self.root.update()
+            X_POSITION = ( self.root.winfo_screenwidth() - self.root.winfo_width() ) // 2
+            Y_POSITION = ( self.root.winfo_screenheight() - self.root.winfo_height() ) // 2
+            self.root.geometry("+" + str(int(X_POSITION)) + "+" + str(int(Y_POSITION)))
 
     def bind(self, key, command):
         self.root.bind(key, command)
@@ -97,7 +76,7 @@ class Application(tk.Frame):
         return self.root
 
     def mainloop(self):
-        self.window()
+        self.geometry(self.center)
         self.root.mainloop()
 
 
@@ -368,39 +347,6 @@ class ScrollableTab(tk.Frame):
 #################                           GUI FUNCTIONS                           #################
 #####################################################################################################
 
-# def UpdateDimensions(application):
-
-#     parent = application.winfo_parent()
-#     master = application._nametowidget(parent)
-
-#     master.update()
-
-#     if application:
-#         padding_x = master.winfo_width() - application.winfo_width()
-#         padding_y = master.winfo_height() - application.winfo_height()
-
-#     frames = master.winfo_children()
-
-#     frame_heights = []
-#     for frame in frames:
-#         if frame.winfo_ismapped():
-#             frame_heights.append(frame.winfo_height())
-#     PROGRAM_HEIGHT = sum(frame_heights) + padding_y if application else sum(frame_heights)
-
-#     frame_widths = []
-#     for frame in frames:
-#         if frame.winfo_ismapped():
-#             frame_widths.append(frame.winfo_width())
-#     PROGRAM_WIDTH = max(frame_widths) + padding_x if application else max(frame_widths)
-
-#     X_POSITION = ( master.winfo_screenwidth() - PROGRAM_WIDTH )/2
-#     Y_POSITION = ( master.winfo_screenheight() - PROGRAM_HEIGHT )/2
-
-#     master.geometry(str(PROGRAM_WIDTH) + "x" + str(PROGRAM_HEIGHT))
-#     master.geometry(str(PROGRAM_WIDTH) + "x" + str(PROGRAM_HEIGHT) + "+" \
-#                   + str(int(X_POSITION)) + "+" + str(int(Y_POSITION)))
-
-
 def ResourcePath(relative_path):
     import sys, os
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath('__main__')))
@@ -423,7 +369,6 @@ def RenderImage(filepath, downscale=None):
     elif downscale and type(downscale) == tuple and len(downscale) == 2:
         width_scale = downscale[0]
         height_scale = downscale[1]
-        print(width_scale, height_scale)
         scaled_width = int( width / width_scale )
         scaled_height = int( height / height_scale )
         loaded = loaded.resize((scaled_width, scaled_height), Image.ANTIALIAS)
