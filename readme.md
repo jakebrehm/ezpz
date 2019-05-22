@@ -1,4 +1,6 @@
-# Lemons
+<p align="center">
+  <img src="https://github.com/jakebrehm/lemons/blob/master/img/logo.png" alt="lemons logo"/>
+</p>
 
 -----------------
 
