@@ -1,43 +1,49 @@
 # Lemons
 
-A package that makes things easy.
+-----------------
 
-## Why lemons?
+**lemons** is a package that makes things easy.
+
+# Why lemons?
 
 Originally intending to call this package *ezpz*, it was soon discovered that the name had already been taken. Heartbroken, and with no other ideas for what to call this package, it felt like the world had ended. The feeling of dread and loss was devastating - debilitating, even.
 
 Nonetheless, when life give you lemons, you squeeze them! Aha, an epiphany: why not go back to the root of it all, the title of one of my earliest programs: *EZPZ Lemon Squeezy*? A simple yet elegant title was there all along, yearning to represent this package and all it stood for; the darkness vanished as quickly as it came, and the name *lemons* was born.
 
-## What does it do?
+# What is it?
 
 *Lemons* tries to make data crunching and GUI building easier by eliminating a lot of repetitive and error-prone code. Please keep in mind that the package is still in its infancy, so its functionality is currently quite limited.
 
-### Data Crunching
+## Main features
 
-With one line of code each, *lemons* can currently:
+In terms of data analysis, *lemons* makes working with data and csv files easier. For example, It can read a .csv file and return the desired columns, as well as write data to a .csv file - both in one line of code. It can also do more complicated things, such as adding tolerance bands around a data series.
 
-* Read a .csv file and return the desired columns
-* Write data to a .csv file
-* Separate a data set into header data and body data
-* Combine the header data with the body data again if necessary
+The tkinter framework, as many know, is not the most user-friendly GUI-builder out there. *Lemons* hopes to help ease that pain a little. For example, Creating a scrollable notebook tab, which previously took dozens of lines of code per tab, can now be done in just two.
 
-### GUI Building
+# How to get it
 
-The tkinter framework, as many know, is not the most user-friendly GUI-builder out there. *Lemons* hopes to help ease that pain a little. This is where this package really shines.
+## Dependencies
 
-Some of the things that can be done:
+Currently, **lemons** does not require any additional packages to be installed on your machine. However, if you want to use image functionality from the gui module, then **pillow** is necessary.
 
-* Easily create a horizontal separator with vertical padding
-* Add convenient spacing between widgets
-* Make input and output fields and lists, and then easily get the filepaths of the selections
-* Creating a scrollable notebook tab, which previously took dozens of lines of code per tab, can now be done in just two:
+## Pip installation ![Current Version](https://img.shields.io/badge/pypi-v0.20-yellow.svg?style=flat?link=http://pypi.org/project/lemons/)
 
-        tab = lemons.gui.ScrollableTab(notebook, 'Title')
-        # Your tab contents here
-        tab.update()
+The latest stable version of the package is uploaded to PyPI.
 
-## Special Thanks
+To install, open a command prompt and type, or copy and paste:
+```
+pip install lemons
+```
 
-Thank you for taking the time to read this and use this package. Enjoy!
+To upgrade to the latest version:
+```
+pip install --upgrade lemons
+```
 
-Please email `mail@jakebrehm.com` with any feedback or suggestions.
+To uninstall the package:
+```
+pip uninstall lemons
+```
+
+# Authors
+- **Jake Brehm** - *Initial Work* - [Email](jbrehm@tactair.com) | [Github](http://github.com/jakebrehm) | [LinkedIn](http://linkedin.com/in/jacobbrehm)
