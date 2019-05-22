@@ -3,13 +3,14 @@ from setuptools import setup, find_packages
 
 HERE = pathlib.Path(__file__).parent
 
-README = (HERE / 'readme.md').read_text()
+README = (HERE / 'README.md').read_text()
 
 setup(
      name='lemons',
-     version='0.19',
+     version='0.19.1',
      author="Jake Brehm",
      author_email="mail@jakebrehm.com",
+     license='MIT',
      description="A GUI-building and data-crunching utility package.",
      long_description=README,
      long_description_content_type="text/markdown",
