@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/jakebrehm/lemons/blob/master/img/logo.png" width="864" height="253" alt="lemons logo"/>
+  <img src="https://github.com/jakebrehm/lemons/blob/master/img/logo.png" width="432" height="126" alt="lemons logo"/>
 </p>
 
 -----------------
