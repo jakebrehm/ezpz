@@ -48,4 +48,4 @@ pip uninstall lemons
 ```
 
 # Authors
-- **Jake Brehm** - *Initial Work* - [Email](jbrehm@tactair.com) | [Github](http://github.com/jakebrehm) | [LinkedIn](http://linkedin.com/in/jacobbrehm)
+- **Jake Brehm** - *Initial Work* - [Email](mailto:jbrehm@tactair.com) | [Github](http://github.com/jakebrehm) | [LinkedIn](http://linkedin.com/in/jacobbrehm)
