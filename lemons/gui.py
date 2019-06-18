@@ -61,7 +61,10 @@ class Application(tk.Frame):
         elif resizable and type(resizable) == tuple and len(resizable) == 2:
             self.root.resizable(width=resizable[0], height=resizable[1])
 
-    def geometry(self, center=True):
+    def geometry(self, width, height):
+        self.root.geometry(f'{width}x{height}')
+
+    def _position(self, center=True):
         if center:
             self.root.update()
             X_POSITION = ( self.root.winfo_screenwidth() - self.root.winfo_width() ) // 2
@@ -76,7 +79,7 @@ class Application(tk.Frame):
         return self.root
 
     def mainloop(self):
-        self.geometry(self.center)
+        self._position(self.center)
         self.root.mainloop()
 
 
@@ -84,10 +87,7 @@ class Header(tk.Frame):
 
     def __init__(self, *args, logo=None, downscale=None, **kwargs):
 
-        # from PIL import Image, ImageTk
-
         tk.Frame.__init__(self, *args, **kwargs)
-        MARGIN_SIZE = 20
 
         logo_title = tk.Frame(self)
         logo_title.grid_columnconfigure(0, weight=1)
@@ -110,6 +110,7 @@ class Header(tk.Frame):
 class Separator(tk.Frame):
 
     def __init__(self, *args, padding=None, **kwargs):
+
         tk.Frame.__init__(self, *args, **kwargs)
 
         if padding and type(padding) == int:
@@ -139,20 +140,18 @@ class Separator(tk.Frame):
 
 class Space(tk.Frame):
 
-    def __init__(self, *args, row, column, padding=20, direction='horizontal',
+    def __init__(self, *args, row, column, padding=None,
                  rowspan=None, columnspan=None, **kwargs):
-        if direction == 'horizontal':
-            tk.Frame.__init__(self, *args, height=padding, **kwargs)
-            self.grid(row=row, column=column, columnspan=columnspan, sticky='NSEW')
-        elif direction == 'vertical':
-            tk.Frame.__init__(self, *args, width=padding, **kwargs)
-            self.grid(row=row, column=column, rowspan=rowspan, sticky='NSEW')
+
+        tk.Frame.__init__(self, *args, height=padding, width=padding, **kwargs)
+        self.grid(row=row, column=column, columnspan=columnspan, rowspan=rowspan, sticky='NSEW')
 
 
 class InputField(tk.Frame):
 
     def __init__(self, *args, quantity, appearance='entry', fullpath=True, width=40,
                  title='Select the input', **kwargs):
+
         tk.Frame.__init__(self, *args, **kwargs)
 
         self.quantity = quantity
@@ -242,6 +241,7 @@ class OutputField(tk.Frame):
 
     def __init__(self, *args, quantity, filetypes=None, default=None, fullpath=True,
                  title='Choose output destination', **kwargs):
+
         tk.Frame.__init__(self, *args, **kwargs)
 
         self.quantity = quantity
@@ -341,6 +341,44 @@ class ScrollableTab(tk.Frame):
         self.canvas.config(yscrollincrement=1)
         self.canvas.config(scrollregion=self.canvas.bbox('all'))
         self.scroll(self.canvas, self.frame)
+
+
+class StatusBar(tk.Frame):
+
+    def __init__(self, *args, panels=1, weight=None, update=False, **kwargs):
+
+        self.update = update
+
+        if weight is not None and len(weight) != panels:
+            raise ValueError('Number of items in the weight tuple does not ' \
+                'match the number of panels.')
+
+        tk.Frame.__init__(self, *args, **kwargs)
+        for column in range(panels):
+            self.columnconfigure(column, weight=weight[column] if weight else 1)
+
+        self._texts = []
+        self._labels = []
+        for panel in range(panels):
+            text_variable = tk.StringVar()
+            label = ttk.Label(self, textvariable=text_variable, relief='sunken')
+            label.grid(row=0, column=panel, sticky='EW')
+            self._texts.append(text_variable)
+            self._labels.append(label)
+
+    def _update(self):
+        longest, index = None, None
+        for t, text in enumerate(self._texts):
+            if longest is None or ( len(text.get()) > longest ):
+                longest, index = len(text.get()), t
+        for label in self._labels: label['width'] = longest
+
+    def get(self, number):
+        return self._texts[number-1].get()[1:]
+
+    def set(self, number, text):
+        self._texts[number-1].set(f' {text}')
+        if self.update: self._update()
 
 
 #####################################################################################################
