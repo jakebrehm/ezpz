@@ -7,7 +7,7 @@ README = (HERE / 'README.md').read_text()
 
 setup(
      name='lemons',
-     version='0.22',
+     version='0.23',
      author="Jake Brehm",
      author_email="mail@jakebrehm.com",
      license='MIT',

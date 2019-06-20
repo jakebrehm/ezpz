@@ -150,7 +150,7 @@ class Space(tk.Frame):
 class InputField(tk.Frame):
 
     def __init__(self, *args, quantity, appearance='entry', fullpath=True, width=40,
-                 title='Select the input', **kwargs):
+                 title='Select the input', image=None, command=None, **kwargs):
 
         tk.Frame.__init__(self, *args, **kwargs)
 
@@ -159,6 +159,8 @@ class InputField(tk.Frame):
         self.width = width
         self.fullpath = fullpath
         self.title = title
+        self.image = image
+        self.command = command
 
         self.inputs = []
 
@@ -167,7 +169,8 @@ class InputField(tk.Frame):
             label.grid(row=0, column=0, sticky='EW')
             self.entry = ttk.Entry(self, takefocus=False, width=self.width, state='readonly')
             self.entry.grid(row=1, column=0, padx=(0,2), sticky='EW')
-            button = ttk.Button(self, takefocus=False, text='Browse...', command=self.Browse)
+            button = ttk.Button(self, takefocus=False, text='Browse...', image=self.image,
+                                command=self.Browse)
             button.grid(row=1, column=1, sticky='NSEW')
             self.columnconfigure(0, weight=1)
 
@@ -183,7 +186,8 @@ class InputField(tk.Frame):
             self.list.config(state='disabled')
 
             controls = tk.Frame(self)
-            button = ttk.Button(controls, takefocus=False, text='Browse...', command=self.Browse)
+            button = ttk.Button(controls, takefocus=False, text='Browse...', image=self.image,
+                                command=self.Browse)
             button.grid(row=0, column=0, sticky="NSEW")
             controls.grid_rowconfigure(0, weight=1)
             controls.grid(row=1, column=1, sticky="NSEW")
@@ -192,46 +196,54 @@ class InputField(tk.Frame):
 
     def Browse(self):
 
-        field = self.entry if self.appearance == 'entry' else self.list
+        self.field = self.entry if self.appearance == 'entry' else self.list
 
         if self.quantity == 'single':
             file = fd.askopenfilename(title=self.title)
             if file:
-                field.config(state='normal')
-                field.delete(0, 'end')
+                self.field.config(state='normal')
+                self.field.delete(0, 'end')
                 if self.fullpath:
-                    field.insert(0, file)
+                    self.field.insert(0, file)
                 else:
                     filename = file.split('/')[-1]
-                    field.insert(0, filename)
-                field.config(state='readonly')
-                field.update_idletasks()
-                field.xview_moveto(1)
+                    self.field.insert(0, filename)
+                self.field.config(state='readonly')
+                self.field.update_idletasks()
+                self.field.xview_moveto(1)
             self.inputs = file
 
         elif self.quantity == 'multiple':
             files = fd.askopenfilenames(title=self.title)
             if files:
                 self.inputs = list(files)
-                field.config(state='normal')
-                field.delete(0, 'end')
+                self.field.config(state='normal')
+                self.field.delete(0, 'end')
 
                 for file in self.inputs:
                     display = ' ' + ( file if self.fullpath else file.split('/')[-1] )
                     if self.appearance == 'entry': display += ';'
-                    field.insert('end', display)
+                    self.field.insert('end', display)
                 if self.appearance == 'entry':
-                    text = field.get()[:-1]
-                    field.delete(0, 'end')
-                    field.insert(0, text)
+                    text = self.field.get()[:-1]
+                    self.field.delete(0, 'end')
+                    self.field.insert(0, text)
 
                 if self.appearance == 'entry':
-                    field.config(state='readonly')
-                    field.update_idletasks()
-                    field.xview_moveto(1)
+                    self.field.config(state='readonly')
+                    self.field.update_idletasks()
+                    self.field.xview_moveto(1)
                 elif self.appearance == 'list':
-                    field.config(state='disabled')
-                    field.config(justify='left')
+                    self.field.config(state='disabled')
+                    self.field.config(justify='left')
+
+        if self.command: self.command()
+
+    def clear(self):
+        self.field.config(state='normal')
+        self.field.delete(0, 'end')
+        self.field.config(state='readonly' if self.quantity == 'single' else 'disabled')
+        self.inputs = []
 
     def get(self):
         return self.inputs
@@ -312,35 +324,43 @@ class ScrollableTab(tk.Frame):
         self.canvas = tk.Canvas(self.frame, bd=0, highlightthickness=0)
         if cwidth: self.canvas.config(width=cwidth)
         if cheight: self.canvas.config(height=cheight)
-        self.scrollbar = tk.Scrollbar(self.frame, command=self.canvas.yview)
+        self.scrollbar = tk.Scrollbar(self.frame)
         self.canvas.grid(row=0, column=0, sticky='NSEW')
         self.scrollbar.grid(row=0, column=1, sticky='NSE')
 
         tk.Frame.__init__(self, *args, master=self.canvas, **kwargs)
-        self.canvas.create_window(0, 0, window=self, anchor='nw', tags='inner')
+        self.canvas.create_window(0, 0, window=self, anchor='nw')
         self.grid_columnconfigure(0, weight=1)
         if cwidth: self.grid_columnconfigure(0, minsize=cwidth)
 
-    def scroll(self, canvas, frame):
+        self.bind('<Visibility>', self.update)
+
+    def scroll(self):
 
         def EnterCanvas(event):
-            canvas.bind_all('<MouseWheel>', ScrollCanvas)
+            self.canvas.bind_all('<MouseWheel>', ScrollCanvas)
 
         def LeaveCanvas(event):
-            canvas.unbind_all('<MouseWheel>')
+            self.canvas.unbind_all('<MouseWheel>')
 
         def ScrollCanvas(event):
-            canvas.yview_scroll(int(-1*(event.delta/2)), 'units')
+            self.canvas.yview_scroll(int(-1*(event.delta/2)), 'units')
 
-        frame.bind('<Enter>', EnterCanvas)
-        frame.bind('<Leave>', LeaveCanvas)
+        self.frame.bind('<Enter>', EnterCanvas)
+        self.frame.bind('<Leave>', LeaveCanvas)
 
-    def update(self):
+    def update(self, event=None):
         self.update_idletasks()
         self.canvas.config(yscrollcommand=self.scrollbar.set)
-        self.canvas.config(yscrollincrement=1)
         self.canvas.config(scrollregion=self.canvas.bbox('all'))
-        self.scroll(self.canvas, self.frame)
+        if self.canvas.bbox('all')[-1] > self.canvas.winfo_height():
+            self.scrollbar['command'] = self.canvas.yview
+            self.canvas.config(yscrollincrement=1)
+            self.scroll()
+        else:
+            self.frame.unbind('<Enter>')
+            self.frame.unbind('<Leave>')
+            self.canvas.unbind_all('<MouseWheel>')
 
 
 class StatusBar(tk.Frame):
