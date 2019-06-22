@@ -138,6 +138,14 @@ class Separator(tk.Frame):
         self.grid_columnconfigure(2, minsize=padx[1])
 
 
+class PaddedFrame(tk.Frame):
+
+    def __init__(self, *args, padding=20, **kwargs):
+
+        tk.Frame.__init__(self, *args, **kwargs)
+        self.grid(padx=padding, pady=padding)
+
+
 class Space(tk.Frame):
 
     def __init__(self, *args, row, column, padding=None,
@@ -240,6 +248,7 @@ class InputField(tk.Frame):
         if self.command: self.command()
 
     def clear(self):
+        self.field = self.entry if self.appearance == 'entry' else self.list
         self.field.config(state='normal')
         self.field.delete(0, 'end')
         self.field.config(state='readonly' if self.quantity == 'single' else 'disabled')
