@@ -343,6 +343,7 @@ class ScrollableTab(tk.Frame):
         if cwidth: self.grid_columnconfigure(0, minsize=cwidth)
 
         self.bind('<Visibility>', self.update)
+        self.bind('<Configure>', self.update)
 
     def scroll(self):
 

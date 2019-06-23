@@ -20,7 +20,7 @@ Nonetheless, when life give you lemons, you squeeze them! Aha, an epiphany: why 
 
 In terms of data analysis, *lemons* makes working with data and csv files easier. For example, It can read a .csv file and return the desired columns, as well as write data to a .csv file - both in one line of code. It can also do more complicated things, such as adding tolerance bands around a data series.
 
-The tkinter framework, as many know, is not the most user-friendly GUI-builder out there. *Lemons* hopes to help ease that pain a little. For example, creating a scrollable notebook tab, which previously took dozens of lines of code per tab, can now be done in just two.
+The tkinter framework, as many know, is not the most user-friendly GUI-builder out there. *Lemons* hopes to help ease that pain a little. For example, creating a scrollable notebook tab, which previously took dozens of lines of code per tab, can now be done in just one.
 
 # How to get it
 
