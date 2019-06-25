@@ -109,7 +109,7 @@ class Header(tk.Frame):
 
 class Separator(tk.Frame):
 
-    def __init__(self, *args, padding=None, **kwargs):
+    def __init__(self, *args, padding=None, orientation='horizontal', **kwargs):
 
         tk.Frame.__init__(self, *args, **kwargs)
 
@@ -130,12 +130,11 @@ class Separator(tk.Frame):
             padx = (0, 0)
             pady = (0, 0)
 
-        ttk.Separator(self, orient='horizontal').grid(row=1, column=1, sticky="EW")
-        self.columnconfigure(1, weight=1)
-        self.grid_rowconfigure(0, minsize=pady[0])
-        self.grid_rowconfigure(2, minsize=pady[1])
-        self.grid_columnconfigure(0, minsize=padx[0])
-        self.grid_columnconfigure(2, minsize=padx[1])
+        sticky = 'EW' if orientation == 'horizontal' else 'NS'
+        separator = ttk.Separator(self, orient=orientation)
+        separator.grid(row=0, column=0, padx=padx, pady=pady, sticky=sticky)
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=1)
 
 
 class PaddedFrame(tk.Frame):
@@ -414,6 +413,13 @@ class StatusBar(tk.Frame):
 #####################################################################################################
 #################                           GUI FUNCTIONS                           #################
 #####################################################################################################
+
+def CenterWindow(window):
+    window.update()
+    X_POSITION = ( window.winfo_screenwidth() - window.winfo_width() ) // 2
+    Y_POSITION = ( window.winfo_screenheight() - window.winfo_height() ) // 2
+    window.geometry("+" + str(int(X_POSITION)) + "+" + str(int(Y_POSITION)))
+
 
 def ResourcePath(relative_path):
     import sys, os
