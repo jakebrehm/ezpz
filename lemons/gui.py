@@ -65,11 +65,7 @@ class Application(tk.Frame):
         self.root.geometry(f'{width}x{height}')
 
     def _position(self, center=True):
-        if center:
-            self.root.update()
-            X_POSITION = ( self.root.winfo_screenwidth() - self.root.winfo_width() ) // 2
-            Y_POSITION = ( self.root.winfo_screenheight() - self.root.winfo_height() ) // 2
-            self.root.geometry("+" + str(int(X_POSITION)) + "+" + str(int(Y_POSITION)))
+        if center: CenterWindow(self.root)
 
     def bind(self, key, command):
         self.root.bind(key, command)
@@ -157,7 +153,7 @@ class Space(tk.Frame):
 class InputField(tk.Frame):
 
     def __init__(self, *args, quantity, appearance='entry', fullpath=True, width=40,
-                 title='Select the input', image=None, command=None, **kwargs):
+                 title='Select the input', image=None, command=None, filetypes=None, **kwargs):
 
         tk.Frame.__init__(self, *args, **kwargs)
 
@@ -168,29 +164,31 @@ class InputField(tk.Frame):
         self.title = title
         self.image = image
         self.command = command
+        self.filetypes = filetypes
 
         self.inputs = []
 
         if self.appearance == 'entry':
             label = ttk.Label(self, text='Input location:')
             label.grid(row=0, column=0, sticky='EW')
-            self.entry = ttk.Entry(self, takefocus=False, width=self.width, state='readonly')
-            self.entry.grid(row=1, column=0, padx=(0,2), sticky='EW')
+            self.field = ttk.Entry(self, takefocus=False, width=self.width, state='readonly')
+            self.field.grid(row=1, column=0, padx=(0,2), sticky='EW')
             button = ttk.Button(self, takefocus=False, text='Browse...', image=self.image,
                                 command=self.Browse)
             button.grid(row=1, column=1, sticky='NSEW')
             self.columnconfigure(0, weight=1)
 
         elif self.appearance == 'list':
-            self.list = tk.Listbox(self, state='normal', height=5, width=self.width, justify='center')
-            self.list.grid(row=1, column=0, padx=(0,2), sticky="EW")
+            self.field = tk.Listbox(self, state='normal', height=5, width=self.width,
+                                   justify='center')
+            self.field.grid(row=1, column=0, padx=(0,2), sticky="EW")
             info = ['',
-                          '',
-                          'Selecting multiple files is optional.',
-                          '',
-                          '']
-            [self.list.insert('end', item) for item in info]
-            self.list.config(state='disabled')
+                    '',
+                    ' Selecting multiple files is optional.',
+                    '',
+                    '']
+            [self.field.insert('end', item) for item in info]
+            self.field.config(state='disabled')
 
             controls = tk.Frame(self)
             button = ttk.Button(controls, takefocus=False, text='Browse...', image=self.image,
@@ -203,10 +201,11 @@ class InputField(tk.Frame):
 
     def Browse(self):
 
-        self.field = self.entry if self.appearance == 'entry' else self.list
-
         if self.quantity == 'single':
-            file = fd.askopenfilename(title=self.title)
+            if self.filetypes is None:
+                file = fd.askopenfilename(title=self.title)
+            else:
+                file = fd.askopenfilename(title=self.title, filetypes=self.filetypes)
             if file:
                 self.field.config(state='normal')
                 self.field.delete(0, 'end')
@@ -221,7 +220,10 @@ class InputField(tk.Frame):
             self.inputs = file
 
         elif self.quantity == 'multiple':
-            files = fd.askopenfilenames(title=self.title)
+            if self.filetypes is None:
+                files = fd.askopenfilenames(title=self.title)
+            else:    
+                files = fd.askopenfilenames(title=self.title, filetypes=self.filetypes)
             if files:
                 self.inputs = list(files)
                 self.field.config(state='normal')
@@ -247,7 +249,6 @@ class InputField(tk.Frame):
         if self.command: self.command()
 
     def clear(self):
-        self.field = self.entry if self.appearance == 'entry' else self.list
         self.field.config(state='normal')
         self.field.delete(0, 'end')
         self.field.config(state='readonly' if self.quantity == 'single' else 'disabled')
@@ -390,7 +391,7 @@ class StatusBar(tk.Frame):
         self._labels = []
         for panel in range(panels):
             text_variable = tk.StringVar()
-            label = ttk.Label(self, textvariable=text_variable, relief='sunken')
+            label = tk.Label(self, textvariable=text_variable, relief='sunken')
             label.grid(row=0, column=panel, sticky='EW')
             self._texts.append(text_variable)
             self._labels.append(label)
