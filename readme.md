@@ -6,6 +6,10 @@
 
 **lemons** is a package that makes things easy.
 
+<a href="https://pypi.org/project/lemons/">
+<img src="https://img.shields.io/pypi/v/lemons" alt="latest release" />
+</a>
+
 # Why lemons?
 
 Originally intending to call this package *ezpz*, it was soon discovered that the name had already been taken. Heartbroken, and with no other ideas for what to call this package, it felt like the world had ended. The feeling of dread and loss was devastating - debilitating, even.

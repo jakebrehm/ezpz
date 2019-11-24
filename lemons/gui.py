@@ -141,6 +141,21 @@ class PaddedFrame(tk.Frame):
         self.grid(padx=padding, pady=padding)
 
 
+# class PaddedLabelFrame(tk.Frame):
+
+#     # def __init__(self, *args, padding=20, **kwargs):
+#     def __init__(self, master, text=None, padding=20, **kwargs):
+
+#         master = args[0]
+#         args = args[1:]
+
+#         container = tk.LabelFrame(master, text=text)
+#         container.grid()
+
+#         tk.Frame.__init__(self, *args, **kwargs)
+#         self.grid(padx=padding, pady=padding)
+
+
 class Space(tk.Frame):
 
     def __init__(self, *args, row, column, padding=None,
@@ -420,6 +435,20 @@ def CenterWindow(window):
     X_POSITION = ( window.winfo_screenwidth() - window.winfo_width() ) // 2
     Y_POSITION = ( window.winfo_screenheight() - window.winfo_height() ) // 2
     window.geometry("+" + str(int(X_POSITION)) + "+" + str(int(Y_POSITION)))
+
+
+def GetRoot(widget):
+    root = widget.nametowidget(widget.winfo_toplevel())
+    while not isinstance(root, tk.Tk):
+        root = root.nametowidget(root.winfo_parent())
+    return root
+
+
+def GetApplication(widget):
+    root = GetRoot(widget)
+    for child in root.winfo_children():
+        if isinstance(child, Application):
+            return child
 
 
 def ResourcePath(relative_path):
