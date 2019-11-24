@@ -32,7 +32,7 @@ The tkinter framework, as many know, is not the most user-friendly GUI-builder o
 
 Currently, **lemons** primarily uses the standard Python library and therefore does not require any additional packages to be installed on your machine. However, if you want to use image functionality from the gui module, then **pillow** is necessary.
 
-## Pip installation [![Current Version](https://img.shields.io/badge/pypi-v0.20-yellow.svg?style=flat?link=http://pypi.org/project/lemons/)](https://pypi.org/project/lemons/)
+## Pip installation
 
 The latest stable version of the package is uploaded to PyPI.
 
