@@ -184,8 +184,8 @@ class InputField(tk.Frame):
         self.inputs = []
 
         if self.appearance == 'entry':
-            label = ttk.Label(self, text='Input location:')
-            label.grid(row=0, column=0, sticky='EW')
+            self.label = ttk.Label(self, text='Input location:')
+            self.label.grid(row=0, column=0, sticky='EW')
             self.field = ttk.Entry(self, takefocus=False, width=self.width, state='readonly')
             self.field.grid(row=1, column=0, padx=(0,2), sticky='EW')
             button = ttk.Button(self, takefocus=False, text='Browse...', image=self.image,
@@ -291,8 +291,8 @@ class OutputField(tk.Frame):
         if self.filetypes is None: self.filetypes = ()
         if self.default is None: self.default = ()
 
-        label = ttk.Label(self, text='Output destination:')
-        label.grid(row=0, column=0, sticky='EW')
+        self.label = ttk.Label(self, text='Output destination:')
+        self.label.grid(row=0, column=0, sticky='EW')
         self.entry = ttk.Entry(self, takefocus=False, state='readonly')
         self.entry.grid(row=1, column=0, padx=(0,2), sticky='EW')
         button = ttk.Button(self, takefocus=False, text='Browse...', command=self.Browse)
@@ -342,7 +342,7 @@ class ScrollableTab(tk.Frame):
         parent = self.notebook._nametowidget(parent_name)
 
         self.frame = tk.Frame(parent)
-        self.frame.grid_columnconfigure(0, weight=1)
+        self.frame.columnconfigure(0, weight=1)
         self.notebook.add(self.frame, text=title)
 
         self.canvas = tk.Canvas(self.frame, bd=0, highlightthickness=0)
@@ -353,9 +353,9 @@ class ScrollableTab(tk.Frame):
         self.scrollbar.grid(row=0, column=1, sticky='NSE')
 
         tk.Frame.__init__(self, *args, master=self.canvas, **kwargs)
-        self.canvas.create_window(0, 0, window=self, anchor='nw')
-        self.grid_columnconfigure(0, weight=1)
-        if cwidth: self.grid_columnconfigure(0, minsize=cwidth)
+        self.canvas.create_window(0, 0, window=self, anchor='nw', tags='window')
+        self.columnconfigure(0, weight=1)
+        if cwidth: self.columnconfigure(0, minsize=cwidth)
 
         self.bind('<Visibility>', self.update)
         self.bind('<Configure>', self.update)
@@ -376,6 +376,11 @@ class ScrollableTab(tk.Frame):
 
     def update(self, event=None):
         self.update_idletasks()
+        self.canvas.itemconfig(
+            'window',
+            # height=self.canvas.winfo_height(),
+            width=self.canvas.winfo_width(),
+        )
         self.canvas.config(yscrollcommand=self.scrollbar.set)
         self.canvas.config(scrollregion=self.canvas.bbox('all'))
         if self.canvas.bbox('all')[-1] > self.canvas.winfo_height():
@@ -386,6 +391,54 @@ class ScrollableTab(tk.Frame):
             self.frame.unbind('<Enter>')
             self.frame.unbind('<Leave>')
             self.canvas.unbind_all('<MouseWheel>')
+
+
+
+class ScrollableFrame(ScrollableTab):
+
+    def __init__(self, master, *args, cheight=False, cwidth=False, **kwargs):
+
+        parent = master
+
+        self.frame = tk.Frame(parent)
+        self.frame.columnconfigure(0, weight=1)
+
+        self.canvas = tk.Canvas(self.frame, bd=0, highlightthickness=0)
+        if cwidth: self.canvas.config(width=cwidth)
+        if cheight: self.canvas.config(height=cheight)
+        self.scrollbar = tk.Scrollbar(self.frame)
+        self.canvas.grid(row=0, column=0, sticky='NSEW')
+        self.scrollbar.grid(row=0, column=1, sticky='NSE')
+
+        tk.Frame.__init__(self, *args, master=self.canvas, **kwargs)
+        self.canvas.create_window(0, 0, window=self, anchor='nw', tags='window')
+        self.columnconfigure(0, weight=1)
+        if cwidth: self.columnconfigure(0, minsize=cwidth)
+
+        self.back_frame = tk.Frame(self.canvas)
+        self.back_frame['width'] = self['width']
+        self.back_frame['height'] = self['height']
+
+        self.bind('<Visibility>', self.update)
+        self.bind('<Configure>', self.update)
+
+    def grid(self, *args, **kwargs):
+        self.frame.grid(*args, **kwargs)
+
+    def grid_remove(self, *args, **kwargs):
+        self.frame.grid_remove()
+        
+
+    # def __getattr__(self, name):
+    #     # print(type(name))
+    #     # def wrapper(*args, **kwargs):
+    #     #     # print(f'{name} was called')
+    #     #     getattr()
+    #     # return wrapper
+    #     print(name)
+    #     # if name == 'grid':
+    #     #     print('nice')
+    #         # print(getattr(self.frame, name))
 
 
 class StatusBar(tk.Frame):
