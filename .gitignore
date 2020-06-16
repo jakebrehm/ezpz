@@ -6,3 +6,4 @@ lemons/.DS_Store
 .DS_Store
 ide/
 .vscode/
+test.py
