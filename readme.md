@@ -18,15 +18,17 @@ Nonetheless, when life give you lemons, you squeeze them! Aha, an epiphany: why 
 
 # What is it?
 
-*Lemons* tries to make GUI building easier by eliminating a lot of repetitive and error-prone code. Please keep in mind that the package is still in its infancy, so its functionality is currently quite limited.
+*lemons* tries to make GUI building easier by eliminating a lot of repetitive and error-prone code. Please keep in mind that the package is still in its infancy, so its functionality is currently quite limited.
 
-he tkinter framework, as many know, is not the most user-friendly GUI-builder out there. *lemons* hopes to help ease that pain a little. For example, creating a scrollable notebook tab, which previously took dozens of lines of code per tab, can now be done in just one.
+The tkinter framework, as many know, is not the most user-friendly GUI-builder out there. *lemons* hopes to help ease that pain a little. For example, **a scrollable notebook tab can be created in just one line of code**, whereas it used to take dozens.
 
 # How to get it
 
 ## Dependencies
 
-Currently, **lemons** primarily uses the standard Python library and therefore does not require any additional packages to be installed on your machine. However, if you want to use image functionality from the gui module, then **pillow** is necessary.
+Currently, **lemons** primarily uses the standard Python library and therefore does not require any additional packages to be installed on your machine.
+
+However, if you want to use image functionality from the gui module, then **pillow** is necessary. This dependency will be made optional in a future release.
 
 ## Pip installation
 

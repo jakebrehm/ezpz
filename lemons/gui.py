@@ -141,21 +141,6 @@ class PaddedFrame(tk.Frame):
         self.grid(padx=padding, pady=padding)
 
 
-# class PaddedLabelFrame(tk.Frame):
-
-#     # def __init__(self, *args, padding=20, **kwargs):
-#     def __init__(self, master, text=None, padding=20, **kwargs):
-
-#         master = args[0]
-#         args = args[1:]
-
-#         container = tk.LabelFrame(master, text=text)
-#         container.grid()
-
-#         tk.Frame.__init__(self, *args, **kwargs)
-#         self.grid(padx=padding, pady=padding)
-
-
 class Space(tk.Frame):
 
     def __init__(self, *args, row, column, padding=None,
@@ -391,7 +376,6 @@ class ScrollableTab(tk.Frame):
             self.frame.unbind('<Enter>')
             self.frame.unbind('<Leave>')
             self.canvas.unbind_all('<MouseWheel>')
-
 
 
 class ScrollableFrame(ScrollableTab):
