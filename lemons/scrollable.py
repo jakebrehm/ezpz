@@ -9,6 +9,7 @@ class ScrollableFrame(tk.Frame):
         self.master = master
 
         self.frame = tk.Frame(master)
+        self.frame.rowconfigure(0, weight=1)
         self.frame.columnconfigure(0, weight=1)
 
         self.canvas = tk.Canvas(self.frame, bd=0, highlightthickness=0)
@@ -23,6 +24,7 @@ class ScrollableFrame(tk.Frame):
 
         super().__init__(master=self.canvas, *args, **kwargs)
         self.canvas.create_window(0, 0, window=self, anchor='nw', tags='window')
+        self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
         if cwidth:
             self.columnconfigure(0, minsize=cwidth)
