@@ -88,10 +88,9 @@ class InputObject(tk.Frame):
 
 class InputEntry(InputObject):
 
-    def __init__(self, master, multiple=False, width=None, filetypes=None,
-                 abbreviate=False):
+    def __init__(self, master, width=None, filetypes=None, abbreviate=False):
         
-        super().__init__(master, multiple, width, filetypes, abbreviate)
+        super().__init__(master, False, width, filetypes, abbreviate)
     
         self.label = ttk.Label(self, text=self._label_text)
         self.label.grid(row=0, column=0, sticky='EW')
@@ -112,17 +111,28 @@ class InputList(InputObject):
 
     def __init__(self, master, width=None, filetypes=None, abbreviate=False):
         
-        super().__init__(master, multiple=True, width=width, filetypes=filetypes, abbreviate=abbreviate)
+        super().__init__(master, True, width, filetypes, abbreviate)
 
         self.label = None
 
-        self.field = tk.Listbox(self, state='disabled', height=5, width=width, justify='center')
+        self.field = tk.Listbox(
+            self,
+            state='disabled',
+            height=5,
+            width=width,
+            justify='center',
+        )
         self.field.grid(row=0, column=0, padx=(0, 2), sticky='EW')
 
         controls = tk.Frame(self)
         controls.grid(row=0, column=1, sticky='NSEW')
         controls.rowconfigure(0, weight=1)
-        self.button = ttk.Button(controls, takefocus=0, text=self._button_text, command=self._browse)
+        self.button = ttk.Button(
+            controls,
+            takefocus=0,
+            text=self._button_text,
+            command=self._browse,
+        )
         self.button.grid(row=0, column=0, sticky='NSEW')
 
     def _browse(self):
@@ -139,3 +149,50 @@ class InputList(InputObject):
 
             self.field['state'] = 'disabled'
             self.field['justify'] = 'left'
+
+
+class OutputEntry(InputEntry):
+
+    def __init__(self, master, width=None, filetypes=None, abbreviate=False,
+                 directory=False, default=None):
+
+        self._directory = directory
+        self._default = None
+
+        if filetypes is None:
+            filetypes = tuple()
+        if default is None:
+            default = tuple()
+
+        super().__init__(master, width, filetypes, abbreviate)
+
+        self._output = []
+
+    def _browse(self):
+
+        function = fd.askdirectory if self._directory else fd.asksaveasfilename
+        kwargs = {'title': self._dialog_title}
+        if not self._directory:
+            kwargs['filetypes'] = self._filetypes
+            kwargs['defaultextension'] = self._default
+        
+        output = function(**kwargs)
+        if output:
+            self._output = [output]
+            output = self._format_item(output, self._abbreviate).strip()
+
+            self.field['state'] = 'normal'
+            self.field.delete(0, 'end')
+
+            self.field.insert(0, output)
+
+            self.field['state'] = 'readonly'
+            self.field.update_idletasks()
+            self.field.xview_moveto(1)
+
+    def get(self):
+        return self._output
+
+    def clear(self):
+        super().clear()
+        self._output = []
