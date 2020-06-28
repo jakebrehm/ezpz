@@ -11,9 +11,9 @@
 
   <img src="https://img.shields.io/github/last-commit/jakebrehm/lemons?style=for-the-badge&color=yellow" alt="Last Commit"></img>
   <img src="https://img.shields.io/github/commit-activity/w/jakebrehm/lemons?style=for-the-badge&color=yellow" alt="Commit Activity"></img>
-  <img src="https://img.shields.io/pypi/v/lemons?style=for-the-badge&color=yellow" alt="Latest Release"></img>
-  <br>
   <img src="https://img.shields.io/github/license/jakebrehm/lemons?style=for-the-badge&color=yellow" alt="MIT License"></img>
+  <br>
+  <img src="https://img.shields.io/pypi/v/lemons?style=for-the-badge&color=yellow" alt="Latest Release"></img>
   <img src="https://img.shields.io/badge/Made%20With-Python%203.7-violet.svg?style=for-the-badge&logo=Python" alt="Made with Python 3.7"></img>
 
 </div>
@@ -30,7 +30,7 @@ Nonetheless, when life give you lemons, you squeeze them! Aha, an epiphany: why 
 
 *lemons* tries to make GUI building easier by eliminating a lot of repetitive and error-prone code. Please keep in mind that the package is still in its infancy, so its functionality is currently quite limited.
 
-The tkinter framework, as many know, is not the most user-friendly GUI-builder out there. *lemons* hopes to help ease that pain a little. For example, **a scrollable notebook tab can be created in just one line of code**, whereas it used to take dozens.
+The Tkinter framework, as many know, is not the most user-friendly GUI-builder out there. *lemons* hopes to help ease that pain a little. For example, **a scrollable notebook tab can be created in just one line of code**, whereas it used to take dozens.
 
 ## How to get it
 
@@ -58,6 +58,10 @@ To uninstall the package:
 ```
 pip uninstall lemons
 ```
+
+## Comments
+
+The class and function names in this library use camel case. This isn't very Pythonic (and I frankly hate the look of it), but it *was* intentional; this was done to match the style of the Tkinter library.
 
 ## Authors
 - **Jake Brehm** - *Initial Work* - [Email](mailto:jbrehm@tactair.com) | [Github](http://github.com/jakebrehm) | [LinkedIn](http://linkedin.com/in/jacobbrehm)

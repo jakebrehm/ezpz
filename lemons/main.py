@@ -18,8 +18,10 @@ class Application(tk.Frame):
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
 
-    def geometry(self, width, height):
+    def geometry(self, width, height, center=False):
         self._root.geometry(f'{width}x{height}')
+        if center:
+            CenterWindow(self._root)
 
     def mainloop(self):
         self._root.mainloop()
@@ -27,3 +29,12 @@ class Application(tk.Frame):
     @property
     def root(self):
         return self._root
+
+
+def CenterWindow(window):
+    if isinstance(window, Application):
+        window = window.root
+    window.update()
+    X_POSITION = ( window.winfo_screenwidth() - window.winfo_width() ) // 2
+    Y_POSITION = ( window.winfo_screenheight() - window.winfo_height() ) // 2
+    window.geometry(f'+{X_POSITION}+{Y_POSITION}')
