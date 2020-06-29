@@ -38,3 +38,10 @@ def CenterWindow(window):
     X_POSITION = ( window.winfo_screenwidth() - window.winfo_width() ) // 2
     Y_POSITION = ( window.winfo_screenheight() - window.winfo_height() ) // 2
     window.geometry(f'+{X_POSITION}+{Y_POSITION}')
+
+
+def GetRoot(widget):
+    root = widget.nametowidget(widget.winfo_toplevel())
+    while not isinstance(root, tk.Tk):
+        root = root.nametowidget(root.winfo_parent())
+    return root
